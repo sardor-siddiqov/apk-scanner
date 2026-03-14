@@ -1,0 +1,9 @@
+.venv
+pycache
+.idea
+uploads
+*.apk
+*.exe
+*.zip
+*.log
+*.pyc
