@@ -1,0 +1,30 @@
+DANGEROUS_PERMISSIONS = {
+    "android.permission.READ_SMS": 15,
+    "android.permission.SEND_SMS": 18,
+    "android.permission.RECEIVE_SMS": 15,
+    "android.permission.READ_CONTACTS": 10,
+    "android.permission.WRITE_CONTACTS": 10,
+    "android.permission.RECORD_AUDIO": 12,
+    "android.permission.CAMERA": 8,
+    "android.permission.READ_CALL_LOG": 15,
+    "android.permission.WRITE_CALL_LOG": 15,
+    "android.permission.SYSTEM_ALERT_WINDOW": 20,
+    "android.permission.REQUEST_INSTALL_PACKAGES": 20,
+    "android.permission.RECEIVE_BOOT_COMPLETED": 8,
+    "android.permission.WRITE_SETTINGS": 12,
+    "android.permission.ACCESS_FINE_LOCATION": 8,
+    "android.permission.ACCESS_COARSE_LOCATION": 6,
+}
+
+HIGH_RISK_KEYWORDS = [
+    "accessibility",
+    "overlay",
+    "sms",
+    "bank",
+    "inject",
+    "bot",
+    "stealer",
+    "spy",
+    "socket",
+    "dexclassloader",
+]

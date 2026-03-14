@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <a href="/about" class="about-btn">About</a>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Scanner</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .about-btn {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.about-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+            margin: 0;
+            padding: 24px;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 34px;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(37, 99, 235, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 46px;
+            line-height: 1.1;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            max-width: 680px;
+            margin: 14px auto 0;
+            color: #475569;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .upload-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            border: 1px solid #dbe4f0;
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+        }
+
+        .upload-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .upload-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .upload-note {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .drop-zone {
+            position: relative;
+            border: 2px dashed #93c5fd;
+            background: #eff6ff;
+            border-radius: 20px;
+            padding: 26px;
+            text-align: center;
+            transition: 0.2s ease;
+        }
+
+        .drop-zone.dragover {
+            background: #dbeafe;
+            border-color: #2563eb;
+            transform: scale(1.01);
+        }
+
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .drop-main {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .drop-sub {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 12px;
+            background: #0f172a;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .file-label:hover {
+            background: #1e293b;
+        }
+
+        .selected-file {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: white;
+            border: 1px solid #dbe4f0;
+            text-align: left;
+        }
+
+        .selected-file-title {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .file-name {
+            color: #0f172a;
+            font-size: 15px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .scan-btn {
+            padding: 15px 18px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+            transition: 0.2s ease;
+        }
+
+        .scan-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .card {
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 18px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .summary-box {
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 18px;
+            font-size: 16px;
+            line-height: 1.7;
+            border: 1px solid transparent;
+        }
+
+        .summary-safe {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: #065f46;
+        }
+
+        .summary-suspicious {
+            background: #fffbeb;
+            border-color: #fde68a;
+            color: #92400e;
+        }
+
+        .summary-danger {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .safe-card {
+            background: #ecfdf5;
+            border-left: 6px solid #22c55e;
+        }
+
+        .warning-card {
+            background: #fffbeb;
+            border-left: 6px solid #f59e0b;
+        }
+
+        .danger-card {
+            background: #fef2f2;
+            border-left: 6px solid #ef4444;
+        }
+
+        .info-card {
+            background: #eff6ff;
+            border-left: 6px solid #3b82f6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+        }
+
+        .label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            word-break: break-word;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .low { background: #16a34a; }
+        .medium { background: #d97706; }
+        .high { background: #dc2626; }
+        .critical { background: #7f1d1d; }
+        .unknown { background: #6b7280; }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 14px;
+            color: #111827;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 14px;
+            color: #1f2937;
+        }
+
+        .loading {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #2563eb;
+            font-size: 16px;
+        }
+
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 14px;
+            border-radius: 14px;
+            margin-top: 20px;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .mono {
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .small-note {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .permission-name {
+            color: #111827;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+
+        .permission-code {
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .pill {
+            background: #eef2ff;
+            color: #3730a3;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .permission-item {
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 14px;
+            list-style: none;
+        }
+
+        .permission-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 18px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .drop-zone {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero-badge">SARDORBEK SECURITY LAB</div>
+    <h1>APK Scanner</h1>
+    <div class="subtitle">
+        Android ilovalarni tekshirish va xavfsizlik tahlili uchun yaratilgan platforma
+    </div>
+</div>
+
+
+
+    <form id="uploadForm">
+        <div class="upload-card">
+            <div class="upload-top">
+                <div>
+                    <div class="upload-title">Fayl yuklash</div>
+                    <div class="upload-note">APK faylni tanlang yoki pastdagi maydonga tashlang</div>
+                </div>
+            </div>
+
+            <div class="drop-zone" id="dropZone">
+                <div class="upload-icon">📦</div>
+                <div class="drop-main">Faylni shu yerga tashlang</div>
+                <div class="drop-sub">yoki pastdagi tugma orqali tanlang</div>
+
+                <label for="fileInput" class="file-label">Fayl tanlash</label>
+                <input type="file" id="fileInput" name="file" required>
+
+                <div class="selected-file">
+                    <div class="selected-file-title">Tanlangan fayl</div>
+                    <div class="file-name" id="fileName">Hali fayl tanlanmagan</div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="scan-btn">Tekshirish</button>
+    </form>
+
+    <div id="loading" class="loading hidden">Tekshirilmoqda...</div>
+    <div id="errorBox" class="error hidden"></div>
+    <div id="resultArea" class="hidden"></div>
+</div>
+
+<script>
+    const form = document.getElementById("uploadForm");
+    const fileInput = document.getElementById("fileInput");
+    const fileName = document.getElementById("fileName");
+    const loading = document.getElementById("loading");
+    const errorBox = document.getElementById("errorBox");
+    const resultArea = document.getElementById("resultArea");
+    const dropZone = document.getElementById("dropZone");
+
+    const permissionDescriptions = {
+        "android.permission.CAMERA": "Telefon kamerasi orqali rasm yoki video olish imkoniyati bor.",
+        "android.permission.RECORD_AUDIO": "Mikrofon orqali ovoz yozib olishi mumkin.",
+        "android.permission.READ_SMS": "Telefoningizdagi SMS xabarlarni o‘qishi mumkin.",
+        "android.permission.SEND_SMS": "Siz bilmagan holda SMS yuborishi mumkin.",
+        "android.permission.RECEIVE_SMS": "Kelgan SMS xabarlarni kuzatishi mumkin.",
+        "android.permission.READ_CONTACTS": "Kontaktlaringizni ko‘rishi mumkin.",
+        "android.permission.WRITE_CONTACTS": "Kontaktlarni o‘zgartirishi yoki qo‘shishi mumkin.",
+        "android.permission.ACCESS_FINE_LOCATION": "Aniq joylashuvingizni GPS orqali aniqlashi mumkin.",
+        "android.permission.ACCESS_COARSE_LOCATION": "Taxminiy joylashuvingizni aniqlashi mumkin.",
+        "android.permission.WRITE_SETTINGS": "Telefon sozlamalarini o‘zgartirishi mumkin.",
+        "android.permission.RECEIVE_BOOT_COMPLETED": "Telefon yoqilganda avtomatik ishga tushishi mumkin.",
+        "android.permission.READ_CALL_LOG": "Qo‘ng‘iroqlar tarixini ko‘rishi mumkin.",
+        "android.permission.WRITE_CALL_LOG": "Qo‘ng‘iroqlar tarixini o‘zgartirishi mumkin.",
+        "android.permission.SYSTEM_ALERT_WINDOW": "Boshqa oynalar ustiga chiqib, foydalanuvchini chalg‘itishi mumkin.",
+        "android.permission.REQUEST_INSTALL_PACKAGES": "Boshqa ilovalarni o‘rnatishga urinishi mumkin.",
+        "android.permission.WRITE_EXTERNAL_STORAGE": "Telefon xotirasidagi fayllarni o‘zgartirishi mumkin.",
+        "android.permission.READ_PHONE_STATE": "Qurilma va tarmoq holati haqida ma’lumot olishi mumkin.",
+        "android.permission.CALL_PHONE": "Telefon qo‘ng‘irog‘ini boshlashi mumkin."
+    };
+
+    function formatRiskText(level) {
+        const map = {
+            low: "Past xavf",
+            medium: "Shubhali",
+            high: "Xavfli",
+            critical: "Juda xavfli",
+            unknown: "Noma’lum"
+        };
+        return map[level] || "Noma’lum";
+    }
+
+    function formatAnalysisType(type) {
+        if (type === "apk") return "APK tahlili";
+        if (type === "generic_file") return "Oddiy fayl tahlili";
+        return "Noma’lum";
+    }
+
+    function formatBytes(bytes) {
+        if (bytes === null || bytes === undefined) return "-";
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+        return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
+
+    function buildSimpleSummary(data) {
+        const source = data.final_verdict_source || "not_available";
+        const level = data.risk_level || "unknown";
+
+        if (source === "waiting_virustotal") {
+            return {
+                title: "⚪ Tekshiruv kutilmoqda",
+                className: "summary-suspicious",
+                text: "Bu fayl VirusTotal bazasida topilmadi. Tekshiruv yuborilgan, yakuniy hukm hali tayyor emas."
+            };
+        }
+
+        if (source !== "virustotal") {
+            return {
+                title: "⚪ Noma’lum",
+                className: "summary-suspicious",
+                text: "Yakuniy hukm hali VirusTotal orqali aniqlanmadi."
+            };
+        }
+
+        if (level === "low") {
+            return {
+                title: "🟢 Xavfsiz",
+                className: "summary-safe",
+                text: "VirusTotal bu faylda zararli belgilar topmadi."
+            };
+        }
+
+        if (level === "medium") {
+            return {
+                title: "🟡 Shubhali",
+                className: "summary-suspicious",
+                text: "VirusTotal ba’zi antiviruslarda shubhali deb topildi."
+            };
+        }
+
+        if (level === "high" || level === "critical") {
+            return {
+                title: "🔴 Xavfli",
+                className: "summary-danger",
+                text: "VirusTotal bu faylni zararli deb baholadi."
+            };
+        }
+
+        return {
+            title: "⚪ Noma’lum",
+            className: "summary-suspicious",
+            text: "Bu fayl bo‘yicha aniq xulosa chiqarib bo‘lmadi."
+        };
+    }
+
+    function renderList(items, emptyText = "Topilmadi") {
+        if (!items || items.length === 0) {
+            return `<div class="muted">${emptyText}</div>`;
+        }
+        return `<ul>${items.map(item => `<li>${item}</li>`).join("")}</ul>`;
+    }
+
+    function renderPermissions(perms) {
+        if (!perms || perms.length === 0) {
+            return `<div class="muted">Ogohlantiruvchi permission topilmadi</div>`;
+        }
+
+        return `
+            <ul class="permission-list">
+                ${perms.map(p => `
+                    <li class="permission-item">
+                        <div class="permission-name">
+                            ${permissionDescriptions[p] || "Bu ruxsat telefon ma’lumotlari yoki funksiyalariga kirish imkonini beradi."}
+                        </div>
+                        <div class="permission-code">${p}</div>
+                    </li>
+                `).join("")}
+            </ul>
+        `;
+    }
+
+    function renderVirusTotal(data) {
+        if (!data.virustotal) return "";
+
+        return `
+            <div class="card danger-card">
+                <div class="section-title">VirusTotal natijasi</div>
+                <div class="grid">
+                    <div>
+                        <div class="label">Zararli deb topganlar</div>
+                        <div class="value">${data.virustotal.malicious ?? 0}</div>
+                    </div>
+                    <div>
+                        <div class="label">Shubhali deb topganlar</div>
+                        <div class="value">${data.virustotal.suspicious ?? 0}</div>
+                    </div>
+                    <div>
+                        <div class="label">Xavfsiz deb topganlar</div>
+                        <div class="value">${data.virustotal.harmless ?? 0}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderResult(data) {
+        if (!data) {
+            errorBox.textContent = "Server bo‘sh javob qaytardi.";
+            errorBox.classList.remove("hidden");
+            return;
+        }
+
+        const riskLevel = data.risk_level || "unknown";
+        const dangerCount = (data.dangerous_permissions || []).length;
+        const exported = data.exported_components || {};
+        const summary = buildSimpleSummary(data);
+
+        resultArea.innerHTML = `
+            <div class="summary-box ${summary.className}">
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">${summary.title}</div>
+                <div>${summary.text}</div>
+            </div>
+
+            <div class="card info-card">
+                <div class="section-title">Umumiy xulosa</div>
+                <div class="grid">
+                    <div>
+                        <div class="label">Yakuniy hukm</div>
+                        <div class="value"><span class="badge ${riskLevel}">${formatRiskText(riskLevel)}</span></div>
+                    </div>
+                    <div>
+                        <div class="label">Yakuniy ball</div>
+                        <div class="value">${data.risk_score ?? "-"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Tahlil turi</div>
+                        <div class="value">${formatAnalysisType(data.analysis_type)}</div>
+                    </div>
+                    <div>
+                        <div class="label">Fayl hajmi</div>
+                        <div class="value">${formatBytes(data.file_size)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card safe-card">
+                <div class="section-title">Fayl ma’lumotlari</div>
+                <div class="grid">
+                    <div>
+                        <div class="label">Fayl nomi</div>
+                        <div class="value">${data.file_name || "-"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Kengaytma</div>
+                        <div class="value">${data.file_extension || "-"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Ilova nomi</div>
+                        <div class="value">${data.app_name || "-"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Package name</div>
+                        <div class="value">${data.package_name || "-"}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card warning-card">
+                <div class="section-title">Ogohlantirishlar</div>
+                <div class="grid">
+                    <div>
+                        <div class="label">Xavfli permissionlar soni</div>
+                        <div class="value">${dangerCount}</div>
+                    </div>
+                    <div>
+                        <div class="label">SMS bilan ishlash</div>
+                        <div class="value">${data.uses_sms ? "Ha" : "Yo‘q"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Accessibility ishlatadi</div>
+                        <div class="value">${data.uses_accessibility ? "Ha" : "Yo‘q"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Overlay ishlatadi</div>
+                        <div class="value">${data.uses_overlay ? "Ha" : "Yo‘q"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Ichki analiz xavfi</div>
+                        <div class="value">${data.local_risk_level || "-"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Ichki analiz balli</div>
+                        <div class="value">${data.local_risk_score ?? "-"}</div>
+                    </div>
+                    <div>
+                        <div class="label">Exported componentlar</div>
+                        <div class="value">${exported.total ?? 0}</div>
+                    </div>
+                    <div>
+                        <div class="label">Obfuscation darajasi</div>
+                        <div class="value">${data.obfuscation_score ?? "-"}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card danger-card">
+                <div class="section-title">Permissionlar ma’nosi</div>
+                ${renderPermissions(data.dangerous_permissions)}
+            </div>
+
+            ${renderVirusTotal(data)}
+
+            <div class="card info-card">
+                <div class="section-title">Texnik izohlar</div>
+                ${renderList(data.notes || [], "Qo‘shimcha izoh yo‘q")}
+            </div>
+
+            <div class="card info-card">
+                <div class="section-title">To‘liq texnik ma’lumot</div>
+                <pre class="mono">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    }
+
+    fileInput.addEventListener("change", function () {
+        if (fileInput.files.length > 0) {
+            fileName.textContent = fileInput.files[0].name;
+        } else {
+            fileName.textContent = "Hali fayl tanlanmagan";
+        }
+    });
+
+    dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            fileName.textContent = e.dataTransfer.files[0].name;
+        }
+    });
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        errorBox.classList.add("hidden");
+        resultArea.classList.add("hidden");
+        resultArea.innerHTML = "";
+
+        const file = fileInput.files[0];
+        if (!file) {
+            errorBox.textContent = "Iltimos, fayl tanlang.";
+            errorBox.classList.remove("hidden");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        loading.classList.remove("hidden");
+
+        try {
+            const response = await fetch("/scan-apk", {
+                method: "POST",
+                body: formData
+            });
+
+            const text = await response.text();
+
+            if (!text || text.trim() === "") {
+                errorBox.textContent = "Server bo‘sh javob qaytardi.";
+                errorBox.classList.remove("hidden");
+                return;
+            }
+
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (jsonError) {
+                errorBox.textContent = "Server JSON formatda javob qaytarmadi.";
+                errorBox.classList.remove("hidden");
+                console.log("Server raw response:", text);
+                return;
+            }
+
+            if (!response.ok) {
+                errorBox.textContent = (data && data.detail) ? data.detail : "Xatolik yuz berdi.";
+                errorBox.classList.remove("hidden");
+            } else {
+                renderResult(data);
+                resultArea.classList.remove("hidden");
+            }
+        } catch (error) {
+            errorBox.textContent = "Frontend xatoligi: " + error.message;
+            errorBox.classList.remove("hidden");
+            console.error(error);
+        } finally {
+            loading.classList.add("hidden");
+        }
+    });
+</script>
+<footer style="
+    margin-top:40px;
+    padding:20px;
+    text-align:center;
+    font-size:14px;
+    color:#64748b;
+    border-top:1px solid #e5e7eb;
+">
+    © 2026 Sardorbek Siddiqov • APK Security Scanner
+    <br>
+    <span style="font-size:13px;">Security research project</span>
+</footer>
+
+</body>
+</html>
+</body>
+</html>
